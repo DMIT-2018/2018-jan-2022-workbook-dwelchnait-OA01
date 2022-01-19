@@ -14,7 +14,7 @@
 
 //reference: Student Notes/Demo/eRestaurant/Linq: Query and Method Syntax/Expressions
 
-//Find all albums release in the 90'x (1990-1999)
+//Find all albums release in the 90's (1990-1999)
 //Order the album by ascending year and then by album title
 //Display the Year, Title, Artist Name and Release Label
 

@@ -15,22 +15,22 @@
 //there is a significant difference between query syntax and method syntax
 
 //query syntax is much like sql
-//   orderby field [asc/]desc [,field [asc/]desc] , ...]
-// asc ascending, desc descending
-// asc is the default option
+//   orderby field {[ascending]|descending} [,field {[ascending]|descending} , ...]
+
+// ascending is the default option
 
 //method syntax is a series of individual methods
 // .OrderBy(x => x.field)
 // .OrderByDescending(x => x.field)
 //  after one of these two beginning methods
 // .ThenBy(x => x.field)
-// .ThenByDescending(x => x.field)
+// .ThenDescending(x => x.field)
 
 //Find all albums release in the 90'x (1990-1999)
 //Order the album by ascending year and then by album title
 //Display the entire album record
 
-//oftern the ordering phrase may be done with the work "within"
+//often the ordering phrase may be done with the word "within"
 //without the "within" the implied order is major to minor in the list of fields
 //with the "within" the implied order is minor to major in the list of fields
 
