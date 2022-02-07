@@ -3,4 +3,94 @@
 @{
     ViewData["Title"] = "Various Controls";
 }
+
+@section CustomCSS{
+    @* the css is coded using embedded css style coding
+       the section has been declared on the _Layout page in
+            the head tag using the RenderSection
+       the actual css is located in a file called _MyCustomCSS
+       this use of the render section demonstrates how to 
+            use the partial name="filename" tag
+       the contents of the file will be placed in the RenderSection
+            declaration on the _Layout page
+    *@
+    <partial name="_MyCustomCSS" />
+}
+
 <h1>Various Form Controls</h1>
+
+@if (!string.IsNullOrWhiteSpace(Model.Feedback))
+{
+    <p>@Model.Feedback</p><br/>
+}
+
+<section class="setflex">
+    <div class="onethird">
+        <h3>TextBoxes</h3>
+        <form method="post">
+            <label>
+                Email input
+                <input type="email" asp-for="EmailText"
+                    placeholder="enter email"/>
+            </label>
+            <br/>
+            <label>
+                Password input
+                <input type="password" asp-for="PasswordText"
+                    placeholder="enter password"/>
+            </label>
+            <br/>
+            <label>
+                Date input
+                <input type="date" asp-for="DateTimeText"
+                    placeholder="enter a date"/>
+            </label>
+            <br/>
+            <button type="submit" value="textbox" id="theTextButton"
+                name="theTextButton" asp-page-handler="Text">Text Submit</button>
+        </form>
+    </div>
+    <div class="onethird">
+        <h3>RadioButton, CheckBox and TextArea</h3>
+        <form method="post">
+            <label>
+                Select favourite meal<br/>
+            </label>
+            @*<input type="radio" asp-for="RadioMeal" value="breakfast"/>
+                &nbsp;Breakfast<br/>
+            <input type="radio" asp-for="RadioMeal" value="lunch"/>
+                &nbsp;Lunch<br/>
+            <input type="radio" asp-for="RadioMeal" value="dinner/supper"/>
+                &nbsp;Dinner/Supper<br/>
+            <input type="radio" asp-for="RadioMeal" value="snacks"/>
+                &nbsp;Snacks<br/>
+            *@
+            @foreach(var item in Model.RadioMeals)
+            {
+                <input type="radio" asp-for="RadioMeal" value="@item"/> @item<br/>
+            }
+            <br/>
+            <label>
+                <input type="checkbox" asp-for="AcceptanceBox" value=true />
+                    &nbsp; I agree to the terms
+            </label>
+            <br/>
+            <label>
+                Message
+                <textarea rows="5" cols="60" placeholder="enter a message"
+                    asp-for="MessageBody">@Model.MessageBody</textarea>
+            </label>
+            <br/>
+            <button type="submit" value="radiocheckarea" id="theRadioCheckAreaButton"
+                name="theRadioCheckAreaButton" asp-page-handler="RadioCheckArea">
+                Radio/Check/Area Submit</button>
+        </form>
+    </div>
+    <div class="onethird">
+        <h3>TextBoxes</h3>
+        <form method="post">
+
+        </form>
+    </div>
+</section>
+
