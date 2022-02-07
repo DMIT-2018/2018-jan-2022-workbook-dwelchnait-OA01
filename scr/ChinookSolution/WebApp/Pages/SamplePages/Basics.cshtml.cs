@@ -12,22 +12,22 @@ namespace WebApp.Pages.SamplePages
 
         //the annotation [TempData] stores data until it's read in another request
         //
-        //Two method within TempData are Keep(string) and Peek(string
-        //keep in a dictionary (named/value pair)
-        //useful to redirection when data is required for more than a single request
-        //Implemented by TempData providers using either cookies or session state
+        //Two method within TempData are Keep(string) and Peek(string)
+        //kept in a dictionary (named/value pair)
+        //useful for redirection when data is required for more than a single request
+        //Implemented by TempData providers, using either cookies or session state
         //TempData is not bound to any particular control like BindProperty
 
         [TempData]
         public string FeedBack { get; set; }
 
         //properties
-        //the annotatio BindProperty ties a property in the PageModel class
+        //the annotation BindProperty ties a property in the PageModel class
         //  directly to a control on the Content page
         //data is transferred between the two automatically
         //on the Content page the control to use this property will have
         //  a helper tag called asp-for
-        //to retain a value in the control tied to this property AND retained
+        //to retain a value in the control tied this property AND retained value
         //  via the @page used the SupportGet attribute
         [BindProperty(SupportsGet = true)]
         public int? id { get; set; }
@@ -59,8 +59,8 @@ namespace WebApp.Pages.SamplePages
         //this request is referred to as a Post
         //
         //General Post
-        //a general post occurs when a page-handler is NOT used
-        //the return datatype can be void however you will normal
+        //a general post occurs when a asp-page-handler is NOT used
+        //the return datatype can be void however you will normally
         //  encounter the datatype IActionResult
         //the IActionResult requires some type of request action
         //  on the return statement
@@ -68,7 +68,7 @@ namespace WebApp.Pages.SamplePages
         // Page() 
         //  :does NOT issue a OnGet request
         //  :remains on the current page
-        //  :a good actions for form processing involving validation
+        //  :a good action for form processing involving validation
         //          and with the catch of a try/catch
         // RedirectToPage
         //  :DOES issue a OnGet request
