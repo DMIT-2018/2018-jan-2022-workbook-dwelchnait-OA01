@@ -25,8 +25,43 @@ namespace WebApp.Pages.SamplePages
         [BindProperty]
         public string MessageBody { get; set; }
 
+        [BindProperty]
+        public int MyRide { get; set; }
+        //pretend the collection is coming from the database
+        //each row of the collection has two values: selection value; selection text
+        //the class SelectionList will be use as the datatype for the collection
+        public List<SelectionList> Rides { get; set; }
+
+        [BindProperty]
+        public string VacationSpot { get; set; }
+        public List<string> VacationSpotList { get; set; }
+
+        [BindProperty]
+        public int RangeValue { get; set; }
+        
         public void OnGet()
         {
+            PopulateLists();
+        }
+
+        public void PopulateLists()
+        {
+            //pretending that this data comes from the database
+            Rides = new List<SelectionList>();
+            Rides.Add(new SelectionList() { ValueId = 3, DisplayText="Bike" });
+            Rides.Add(new SelectionList() { ValueId = 5, DisplayText="Board" });
+            Rides.Add(new SelectionList() { ValueId = 2, DisplayText="Bus" });
+            Rides.Add(new SelectionList() {ValueId = 1, DisplayText="Car" });
+            Rides.Add(new SelectionList() { ValueId = 4, DisplayText="Motorcycle" });
+
+            VacationSpotList = new List<string>();
+            VacationSpotList.Add("California");
+            VacationSpotList.Add("Caribbean");
+            VacationSpotList.Add("Cruising");
+            VacationSpotList.Add("Europe");
+            VacationSpotList.Add("Florida");
+            VacationSpotList.Add("Mexico");
+
         }
         public IActionResult OnPostText()
         {
@@ -44,6 +79,14 @@ namespace WebApp.Pages.SamplePages
             Feedback = $"Meal {RadioMeal}; Acceptance {AcceptanceBox}; Message {MessageBody}";
             return Page();
         }
+
+        public IActionResult OnPostListSlider()
+        {
+            Feedback = $"Ride {MyRide}; Vacation {VacationSpot}; Review Satification {RangeValue}";
+            PopulateLists();
+            return Page();
+        }
+
     }
 
     public class SelectionList
