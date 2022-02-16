@@ -14,7 +14,7 @@ var builder = WebApplication.CreateBuilder(args);
 //  web app to use Individual Accounts
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 
-//setup of the connect string for Chinook
+//retrieve the connect string for Chinook from the appsetting.json file
 var connectionStringChinook = builder.Configuration.GetConnectionString("ChinookDB");
 
 

@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.EntityFrameworkCore;
 using ChinookSystem.DAL;
+using ChinookSystem.BLL;
 #endregion
 
 namespace ChinookSystem
@@ -19,7 +20,12 @@ namespace ChinookSystem
             services.AddDbContext<ChinookContext>(options);
 
             //add any services that you create in the class library using .AddTransient<T>(....)
-
+            services.AddTransient<AboutService>((serviceProvider) =>
+            {
+                //retrieve the registered DbContext done in AddDbContext<>()
+                var context = serviceProvider.GetRequiredService<ChinookContext>();
+                return new AboutService(context);
+            });
         }
     }
 }
