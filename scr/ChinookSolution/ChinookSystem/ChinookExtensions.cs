@@ -26,6 +26,19 @@ namespace ChinookSystem
                 var context = serviceProvider.GetRequiredService<ChinookContext>();
                 return new AboutService(context);
             });
+            services.AddTransient<GenreServices>((serviceProvider) =>
+            {
+                //retrieve the registered DbContext done in AddDbContext<>()
+                var context = serviceProvider.GetRequiredService<ChinookContext>();
+                return new GenreServices(context);
+            });
+            services.AddTransient<AlbumServices>((serviceProvider) =>
+            {
+                //retrieve the registered DbContext done in AddDbContext<>()
+                var context = serviceProvider.GetRequiredService<ChinookContext>();
+                return new AlbumServices(context);
+            });
+
         }
     }
 }
