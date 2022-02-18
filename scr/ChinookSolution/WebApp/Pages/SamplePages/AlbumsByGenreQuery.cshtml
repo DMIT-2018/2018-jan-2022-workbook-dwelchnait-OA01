@@ -14,3 +14,27 @@
         <li>customization</li>
     </ul>
 </blockquote>
+
+@if(Model.HasFeedBack)
+{
+    <p>@Model.FeedBack</p>
+}
+
+@if(Model.HasErrorMsg)
+{
+    <p style="color:firebrick; font-weight:bold;">@Model.ErrorMsg</p>
+}
+
+<form method="post">
+    <label>
+        Select Genre
+        <select asp-for="GenreId">
+            <option value="0">select genre ...</option>
+            @foreach(var item in Model.GenreList)
+            {
+                <option value="@item.ValueId">@item.DisplayText</option>
+            }
+        </select>
+    </label>
+    <button type="submit" >Find Albums</button>
+</form>
