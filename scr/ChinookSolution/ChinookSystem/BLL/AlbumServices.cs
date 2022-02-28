@@ -41,7 +41,8 @@ namespace ChinookSystem.BLL
                                             ReleaseLabel = x.Album.ReleaseLabel,
                                             ArtistName = x.Album.Artist.Name,
                                             TrackCount = 0
-                                        });
+                                        })
+                                        .Distinct();
             return info.ToList();
         }
 
