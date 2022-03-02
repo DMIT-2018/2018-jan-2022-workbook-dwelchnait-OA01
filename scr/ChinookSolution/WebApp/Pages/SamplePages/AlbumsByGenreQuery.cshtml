@@ -51,6 +51,8 @@
                 </select>
             </label>
             <button type="submit" >Find Albums</button>
+            &nbsp;&nbsp;
+            <button type="submit" asp-page-handler="new">New Album</button>
         </form>
     </div>
     <div class="onehalf">
@@ -75,7 +77,14 @@
                         @foreach(var item in Model.AlbumsOfGenre)
                         {
                             <tr>
-                                <td>@item.Title</td>
+                                @*the Title cell text will act as a link to 
+                                    transfer to the CRUD page for Album maintenance
+                                  the href uses the full relative path to reference the page
+                                  the pkey value is attached to the path name
+                                *@
+                                <td><a href="/SamplePages/CRUDAlbum/@item.AlbumId">
+                                        @item.Title
+                                    </a></td>
                                 <td>@item.ReleaseYear</td>
                                 <td>@item.ReleaseLabel</td>
                                 <td>@item.ArtistName</td>

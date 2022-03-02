@@ -114,5 +114,12 @@ namespace WebApp.Pages.SamplePages
             }
             return RedirectToPage(new { GenreId = GenreId}); //causes a Get request which will force OnGet() to execute
         }
+
+        public IActionResult OnPostNew()
+        {
+            //Note: No pkey value is passed on this redirect because you are wanting to
+            //      create a NEW album
+            return RedirectToPage("/SamplePages/CRUDAlbum");
+        }
     }
 }
