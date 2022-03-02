@@ -83,7 +83,31 @@
                         }
                     </tbody>
                     <tfoot>
-
+                        @*code to implement paging on our query*@
+                        <tr colspan="4">
+                            <td>
+                                @{
+                                    foreach(var pageRef in Model.Pager)
+                                    {
+                                        if (pageRef == Model.Pager.CurrentPage)
+                                        {
+                                            //bold current page number
+                                            <b>@pageRef.Text</b> 
+                                        }
+                                        else
+                                        {
+                                            //setup the remaining page numbers as links
+                                            //  to cause the query to be refreshed for
+                                            //  the desired page
+                                            <a title="Page @pageRef.Page"
+                                                asp-asp-page="/SamplePages/AlbumsByGenreQuery"
+                                                asp-route-currentpage="@pageRef.Page">
+                                                @pageRef.Text</a>
+                                        }
+                                    }
+                                }
+                            </td>
+                        </tr>
                     </tfoot>
                 </table>   
             }
