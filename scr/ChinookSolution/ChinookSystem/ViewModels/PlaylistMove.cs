@@ -6,10 +6,11 @@ using System.Threading.Tasks;
 
 namespace ChinookSystem.ViewModels
 {
-    public class PklaylistMove
+    public class PlaylistMove
     {
         public int TrackId { get; set; }
         public bool SelectedTrack { get; set; }
+        public int TrackNumber { get; set; }
         public string TrackInput { get; set; }  
     }
 }
