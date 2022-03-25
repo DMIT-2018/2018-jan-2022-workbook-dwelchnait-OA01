@@ -61,7 +61,7 @@ namespace ChinookSystem.BLL
             //if the business rules are passed, consider the data valid, then
             //  a) stage your transaction work
             //  b) execute a SINGLE .SaveChanges() - commit to database
-             
+
             if (string.IsNullOrWhiteSpace(playlistname))
             {
                 throw new ArgumentNullException("Playlist name is missing.");
@@ -97,7 +97,7 @@ namespace ChinookSystem.BLL
                                             && x.Playlist.UserName.Equals(username)
                                             && x.TrackId == trackid)
                                     .FirstOrDefault();
-                if(playlistTrackExists != null)
+                if (playlistTrackExists != null)
                 {
                     var songname = _context.Tracks
                         .Where(x => x.TrackId == trackid)
@@ -156,7 +156,7 @@ namespace ChinookSystem.BLL
             //Commit the work (Transaction)
             //commiting the work needs a .SaveChanges
             //BUT what if you have discovered errors during the business process??
-            if(errorlist.Count > 0)
+            if (errorlist.Count > 0)
             {
                 throw new AggregateException("Unable to add new track. Check concerns", errorlist);
             }
@@ -171,7 +171,7 @@ namespace ChinookSystem.BLL
         {
             List<Exception> errorList = new List<Exception>();
             Playlist playlistExists = null;
-            PlaylistTrack playlisttrackExists = null;   
+            PlaylistTrack playlisttrackExists = null;
             int trackNumber = 0;
 
             if (string.IsNullOrWhiteSpace(playlistname))
@@ -186,7 +186,7 @@ namespace ChinookSystem.BLL
             {
                 throw new ArgumentNullException("Playlist is empty");
             }
-            
+
             playlistExists = _context.Playlists
                            .Where(x => x.Name.Equals(playlistname)
                                    && x.UserName.Equals(username))
@@ -243,15 +243,126 @@ namespace ChinookSystem.BLL
                 }
             }
 
-            if(errorList.Count > 0)
+            if (errorList.Count > 0)
             {
-                throw new AggregateException("Unable to remove tracks. See following concerns:",errorList);
+                throw new AggregateException("Unable to remove tracks. See following concerns:", errorList);
             }
             else
             {
                 _context.SaveChanges();
             }
         }
-    #endregion
-}
+        public void PlaylistTrack_MoveTracks(string playlistname, string username,
+                                                    List<PlaylistMove> trackstomove)
+        {
+            List<Exception> errorList = new List<Exception>();
+            Playlist playlistExists = null;
+            PlaylistTrack playlisttrackExists = null;
+            int trackNumber = 0;
+
+            if (string.IsNullOrWhiteSpace(playlistname))
+            {
+                throw new ArgumentNullException("Playlist name is missing.");
+            }
+            if (string.IsNullOrWhiteSpace(username))
+            {
+                throw new ArgumentNullException("User name is missing. Log in to add tracks to your playlist");
+            }
+            if (trackstomove.Count == 0)
+            {
+                throw new ArgumentNullException("Playlist is empty");
+            }
+
+            playlistExists = _context.Playlists
+                           .Where(x => x.Name.Equals(playlistname)
+                                   && x.UserName.Equals(username))
+                           .FirstOrDefault();
+            if (playlistExists == null)
+            {
+                errorList.Add(new Exception("Play list does not exist"));
+            }
+            else
+            {
+                //attempt to reorganize the playlist order
+                //ascending sort of a collection (List<T>.Sort())
+                trackstomove.Sort((x,y) => x.TrackInput.CompareTo(y.TrackInput));
+                //determine if any items in the TrackInput are non-positive numerics
+                int tempNum = 0;
+                //positive number test
+                foreach(var track in trackstomove)
+                {
+                    var songname = _context.Tracks
+                                         .Where(x => x.TrackId == track.TrackId)
+                                         .Select(x => x.Name)
+                                         .SingleOrDefault();
+                    if (int.TryParse(track.TrackInput,out tempNum))
+                    {
+                        if (tempNum < 1)
+                        {
+                            errorList.Add(new Exception($"Track ({songname}) new track number needs to be greater than 0. (Ex: 3)"));
+                        }
+                    }
+                    else
+                    {
+                        
+                        errorList.Add(new Exception($"Track ({songname}) new track number needs to be a whole number. (Ex: 3)"));
+                    }
+                }
+                //unique number test
+                for(int i = 0; i < trackstomove.Count-1; i++)
+                {
+                    if (trackstomove[i].Equals(trackstomove[i+1]))
+                    {
+                        var songname1 = _context.Tracks
+                                 .Where(x => x.TrackId == trackstomove[i].TrackId)
+                                 .Select(x => x.Name)
+                                 .SingleOrDefault();
+                        var songname2 = _context.Tracks
+                                 .Where(x => x.TrackId == trackstomove[i + 1].TrackId)
+                                 .Select(x => x.Name)
+                                 .SingleOrDefault();
+                        errorList.Add(new Exception($"Track {songname1} and {songname2} have the same new track number. New track numbers must be different."));
+                    }
+                }
+                //stage re-sequence
+                trackNumber = 1;
+                foreach (PlaylistMove track in trackstomove)
+                {
+                    playlisttrackExists = _context.PlaylistTracks
+                                          .Where(x => x.Playlist.Name.Equals(playlistname)
+                                                  && x.Playlist.UserName.Equals(username)
+                                                  && x.TrackId == track.TrackId)
+                                          .FirstOrDefault();
+                    if (playlisttrackExists != null)
+                    {
+                        playlisttrackExists.TrackNumber = trackNumber;
+
+                        //stage add in local memory
+                        EntityEntry<PlaylistTrack> updating = _context.Entry(playlisttrackExists);
+                        updating.State = Microsoft.EntityFrameworkCore.EntityState.Modified;
+                        trackNumber++;
+                    }
+                    else
+                    {
+                        var songname = _context.Tracks
+                                        .Where(x => x.TrackId == track.TrackId)
+                                        .Select(x => x.Name)
+                                        .SingleOrDefault();
+                        errorList.Add(new Exception($"Track {songname} no longer on playlist."));
+                    }
+                }
+            }
+
+            //Can I commit code
+            if (errorList.Count > 0)
+            {
+                throw new AggregateException("Unable to move tracks. See following concerns:", errorList);
+            }
+            else
+            {
+                _context.SaveChanges();
+            }
+        }
+        #endregion
+    }
 }
