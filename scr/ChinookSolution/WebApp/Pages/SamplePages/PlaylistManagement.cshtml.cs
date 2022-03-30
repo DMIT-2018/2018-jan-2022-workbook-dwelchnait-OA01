@@ -62,8 +62,16 @@ namespace WebApp.Pages.SamplePages
 
         public List<TrackSelection> trackInfo { get; set; }
 
+        /// <summary>
+        /// query model collection
+        /// will be used to fill the html table display
+        /// </summary>
         public List<PlaylistTrackInfo> qplaylistInfo { get; set; }
 
+        /// <summary>
+        /// command model collection
+        /// data will be moved automatically from the form into this collection
+        /// </summary>
         [BindProperty]
         public List<PlaylistMove> cplaylistInfo { get; set; }
 
@@ -259,8 +267,8 @@ namespace WebApp.Pages.SamplePages
             {
                 //Add the code to process the list of tracks via the service.
                 string username = USERNAME;
-                _playlisttrackServices.PlaylistTrack_MoveTracks(playlistname.Trim(),
-                    USERNAME, cplaylistInfo);
+                //_playlisttrackServices.PlaylistTrack_MoveTracks(playlistname.Trim(),
+                //    USERNAME, cplaylistInfo);
                 FeedBackMessage = "Tracks have been reorganized";
 
                 return RedirectToPage(new
