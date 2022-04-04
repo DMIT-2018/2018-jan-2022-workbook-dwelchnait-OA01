@@ -311,7 +311,7 @@ namespace ChinookSystem.BLL
                 //unique number test
                 for(int i = 0; i < trackstomove.Count-1; i++)
                 {
-                    if (trackstomove[i].Equals(trackstomove[i+1]))
+                    if (trackstomove[i].TrackInput.Equals(trackstomove[i+1].TrackInput))
                     {
                         var songname1 = _context.Tracks
                                  .Where(x => x.TrackId == trackstomove[i].TrackId)
