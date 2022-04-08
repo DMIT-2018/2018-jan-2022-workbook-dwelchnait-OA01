@@ -311,17 +311,21 @@ namespace ChinookSystem.BLL
                 //unique number test
                 for(int i = 0; i < trackstomove.Count-1; i++)
                 {
-                    if (trackstomove[i].TrackInput.Equals(trackstomove[i+1].TrackInput))
+                    if (!string.IsNullOrWhiteSpace(trackstomove[i].TrackInput) &&
+                        !string.IsNullOrWhiteSpace(trackstomove[i + 1].TrackInput))
                     {
-                        var songname1 = _context.Tracks
-                                 .Where(x => x.TrackId == trackstomove[i].TrackId)
-                                 .Select(x => x.Name)
-                                 .SingleOrDefault();
-                        var songname2 = _context.Tracks
-                                 .Where(x => x.TrackId == trackstomove[i + 1].TrackId)
-                                 .Select(x => x.Name)
-                                 .SingleOrDefault();
-                        errorList.Add(new Exception($"Track {songname1} and {songname2} have the same new track number. New track numbers must be different."));
+                        if (trackstomove[i].TrackInput.Equals(trackstomove[i+1].TrackInput))
+                        {
+                            var songname1 = _context.Tracks
+                                     .Where(x => x.TrackId == trackstomove[i].TrackId)
+                                     .Select(x => x.Name)
+                                     .SingleOrDefault();
+                            var songname2 = _context.Tracks
+                                     .Where(x => x.TrackId == trackstomove[i + 1].TrackId)
+                                     .Select(x => x.Name)
+                                     .SingleOrDefault();
+                            errorList.Add(new Exception($"Track {songname1} and {songname2} have the same new track number. New track numbers must be different."));
+                        }
                     }
                 }
                 //stage re-sequence
