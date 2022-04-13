@@ -86,18 +86,39 @@ namespace WebApp.Pages.SamplePages
         [BindProperty]
         public int addtrackid { get; set; }
 
+
+
         #region Security Setup
         public ApplicationUser AppUser { get; set; }
         public string EmployeeName { get; set; }
 
+        //save the employeeid
+        //optionally can be used as routing parameter
+        [BindProperty(SupportsGet =true)]
+        public int? employeeId { get; set; }
+
         public const string USERNAME = "HansenB";
         #endregion
+
+
+
         public async Task OnGet()
         {
+            //when you use RedirectToPage(...), you will execute this method
+            //no concerns about obtaining your employee id and name
             AppUser = await _UserManager.FindByNameAsync(User.Identity.Name);
+            employeeId = AppUser.EmployeeId;
             EmployeeName = _Security.GetEmployeeName(AppUser.EmployeeId.Value);
             GetTrackInfo();
             GetPlaylist();
+        }
+
+        public async Task GetActiveEmployee()
+        {
+            //use this method for obtaining employee info 
+            AppUser = await _UserManager.FindByNameAsync(User.Identity.Name);
+            employeeId = AppUser.EmployeeId.Value;
+            EmployeeName = _Security.GetEmployeeName(AppUser.EmployeeId.Value);
         }
 
         public void GetTrackInfo()
@@ -124,6 +145,12 @@ namespace WebApp.Pages.SamplePages
         }
         public IActionResult OnPostTrackSearch()
         {
+            // to obtain the employee info add the following to
+            //      each post.
+
+            _ = GetActiveEmployee();
+            Thread.Sleep(1000);
+
             try
             {
                 if (string.IsNullOrWhiteSpace(searchBy))
@@ -138,8 +165,11 @@ namespace WebApp.Pages.SamplePages
                 {
                     throw new AggregateException(Errors);
                 }
+                
+
                 return RedirectToPage(new
                 {
+                    //employeeid = employeeid,
                     searchBy = searchBy.Trim(),
                     searchArg = searchArg.Trim(),
                     playlistname = string.IsNullOrWhiteSpace(playlistname) ? " " : playlistname.Trim()
@@ -153,11 +183,14 @@ namespace WebApp.Pages.SamplePages
                     ErrorDetails.Add(error.Message);
 
                 }
+                
+
                 return Page();
             }
             catch (Exception ex)
             {
                 ErrorMessage = GetInnerException(ex).Message;
+                
                 return Page();
             }
         }

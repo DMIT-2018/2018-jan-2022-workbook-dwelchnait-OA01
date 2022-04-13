@@ -1,4 +1,6 @@
 ﻿@page "{searchBy?}/{searchArg?}/{playlistname?}"
+@*@page "{employeeid?}/{searchBy?}/{searchArg?}/{playlistname?}"*@
+
 @model WebApp.Pages.SamplePages.PlaylistManagementModel
 @{
     ViewData["Title"] = "Playlist Management";
@@ -7,7 +9,7 @@
 @section CustomCSS{
     <partial name=_MyCustomCSS />
 }
-<h1>Playlist Management for @Model.EmployeeName</h1>
+<h1>Playlist Management for @Model.EmployeeName (ID: @Model.employeeId)</h1>
 <blockquote>
     This page has  been created to demonstrate an UI interface for bulk maintenance
     of data on the database, commonly referred to as <b>transactional processing</b>.
@@ -39,6 +41,8 @@
         </ul>
     </blockquote>
 }
+
+
 <section class="setflex">
     <div class="onehalf">
         <form method="post">
@@ -128,7 +132,6 @@
     </div>
     <div class="onehalf">
        <form method="post" id="playlist">
-
             <label>
                 Enter playlist name:
                 <input type="text" asp-for="playlistname" />
